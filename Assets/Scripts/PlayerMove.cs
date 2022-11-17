@@ -10,6 +10,15 @@ public class PlayerMove : MonoBehaviour
     public Animator animator;
 
     private float x, y;
+
+    public Rigidbody rb;
+    public float jumpHeight = 3;
+
+    public Transform groundCheck;
+    public float groundDistance = 0.1f;
+    public LayerMask groundMask;
+
+    bool isGrounded;
     
     void Update()
     {
@@ -23,6 +32,20 @@ public class PlayerMove : MonoBehaviour
 
         animator.SetFloat("velX", x);
         animator.SetFloat("velY", y);
+
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        if (Input.GetKey("space") && isGrounded)
+        {
+            animator.Play("Jumping");
+
+            Invoke("Jumping", 1f);
+        }
+    }
+
+    public void Jumping()
+    {
+        rb.AddForce(Vector3.up*jumpHeight,ForceMode.Impulse);
     }
 
 }
